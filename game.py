@@ -1,3 +1,6 @@
+import random
+from wonderwords import RandomWord
+
 SNOWMAN_MIN_WORD_LENGTH = 5
 SNOWMAN_MAX_WORD_LENGTH = 8
 SNOWMAN_MAX_WRONG_GUESSES = 7
@@ -20,7 +23,30 @@ def snowman(snowman_word):
     If the player wins and, 
     'Sorry, you lose! The word was {snowman_word}' if the player loses
     """
-    pass
+ 
+    correct_letter_guess_statuses = build_letter_status_dict(snowman_word)
+    wrong_guesses_list = []
+    wrong_guesses_count = 0
+
+    while wrong_guesses_count < SNOWMAN_MAX_WRONG_GUESSES:
+        print_word_progress_string(snowman_word, correct_letter_guess_statuses)
+        
+        if is_word_guessed(snowman_word, correct_letter_guess_statuses):
+            print("Congratulations, you win!")
+            return
+        
+        guess = get_letter_from_user(correct_letter_guess_statuses, wrong_guesses_list)
+        
+        if guess in snowman_word:
+            correct_letter_guess_statuses[guess] = True
+        else:
+            wrong_guesses_list.append(guess)
+            wrong_guesses_count += 1
+            print_snowman_graphic(wrong_guesses_count)
+            print(f"Wrong guesses so far: {wrong_guesses_list}")
+
+    
+    print(f"Sorry, you lose! The word was {snowman_word}.")
 
 
 def print_snowman_graphic(wrong_guesses_count):
@@ -117,3 +143,4 @@ def is_word_guessed(snowman_word, correct_letter_guess_statuses):
         if not correct_letter_guess_statuses[letter]:
             return False
     return True
+
